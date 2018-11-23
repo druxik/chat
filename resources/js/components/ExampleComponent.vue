@@ -6,7 +6,7 @@
                     <div class="card-header">Example Component</div>
 
                     <div class="card-body" @click="allo">
-                        I'm an example component.{{test}}11112
+                        I'm an example component.{{test}}
                     </div>
                 </div>
             </div>

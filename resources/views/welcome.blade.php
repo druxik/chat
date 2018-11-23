@@ -30,6 +30,7 @@
 
             <div id="app">
                 <example-component></example-component>
+                <p></p>
             </div>
 
         </div>
