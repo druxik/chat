@@ -5,8 +5,8 @@
                 <div class="card card-default">
                     <div class="card-header">Example Component</div>
 
-                    <div class="card-body" @click="allo">
-                        I'm an example component.{{test}}
+                    <div class="card-body">
+                        I'm an example component.
                     </div>
                 </div>
             </div>
@@ -18,16 +18,6 @@
     export default {
         mounted() {
             console.log('Component mounted.')
-        },
-        data : function () {
-            return {
-                test : "Y"
-            }
-        },
-        methods : {
-            allo : function () {
-                alert()
-            }
         }
     }
 </script>

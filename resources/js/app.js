@@ -7,8 +7,8 @@
 
 require('./bootstrap');
 
-//window.Vue = require('vue');
 window.Vue = require('vue');
+window.axios = require('axios');
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -17,8 +17,10 @@ window.Vue = require('vue');
  * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
  */
 
-Vue.component('example-component', require('./components/ExampleComponent.vue'));
-
+//Vue.component('example-component', require('./components/ExampleComponent.vue'));
+Vue.component('chat-message', require('./components/ChatMessage.vue'));
+Vue.component('chat-log', require('./components/ChatLog.vue'));
+Vue.component('chat-composer', require('./components/ChatComposer.vue'));
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key)))
 
@@ -27,9 +29,40 @@ Vue.component('example-component', require('./components/ExampleComponent.vue'))
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
-window.onload = function () {
-    const app = new Vue({
-        el: '#app'
-    });
-}
 
+const app = new Vue({
+    el: '#app',
+    data : {
+        messages : [],
+        usersInRoom : []
+    },
+    methods : {
+        addMessage : function (message) {
+            axios.post('/messages', message).then(response => {
+//                console.log(response);
+            });
+            this.messages.push(message);
+        }
+    },
+    created : function () {
+        axios.get('/messages').then(response => {
+            this.messages = response.data;
+        });
+        Echo.join('chatroom')
+            .here((users) => {
+                this.usersInRoom = users;
+            })
+            .leaving((user) => {
+                this.usersInRoom = this.usersInRoom.filter(u => u != user)
+            })
+            .joining((user) => {
+                this.usersInRoom.push(user);
+            })
+            .listen('MessagePosted', (e) => {
+                this.messages.push({
+                    message: e.message.message,
+                    user: e.user
+                });
+            });
+    }
+});
